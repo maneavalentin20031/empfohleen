@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wähle dein Gerät | Empfohlen</title>
+  <link rel="icon" href="data:,">
+  <meta name="description" content="Wähle dein Gerät, um mit App- und Spieletests Geld zu verdienen." />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:         #060818;
+      --card:       rgba(14, 18, 50, 0.97);
+      --border:     rgba(224, 24, 46, 0.18);
+      --red:        #e0182e;
+      --red-dark:   #b8121f;
+      --red-soft:   rgba(224, 24, 46, 0.13);
+      --text:       #eef0f9;
+      --muted:      #8a93ba;
+      --green:      #2ecc71;
+      --shadow:     0 22px 60px rgba(0,0,0,0.55);
+      --font:       'Inter', -apple-system, sans-serif;
+      --font-gaming:'Rajdhani', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      font-family: var(--font);
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at top center, rgba(224,24,46,0.22) 0%, transparent 55%),
+        radial-gradient(ellipse at bottom right, rgba(30,20,80,0.4) 0%, transparent 50%),
+        linear-gradient(180deg, #090b20 0%, #060818 40%, #04060f 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(224,24,46,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(224,24,46,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 520px;
+      padding: 24px 18px 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Topbar */
+    .topbar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .top-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(10, 12, 30, 0.90);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #cdd2f0;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      box-shadow: var(--shadow);
+      animation: fadeSlideDown 0.5s ease both;
+    }
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 0 6px rgba(224,24,46,0.15);
+      flex-shrink: 0;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 6px rgba(224,24,46,0.15); }
+      50%      { box-shadow: 0 0 0 10px rgba(224,24,46,0.04); }
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(145deg, rgba(22,26,66,0.98), rgba(10,13,36,0.98));
+      border: 1px solid rgba(224,24,46,0.25);
+      border-radius: 28px;
+      padding: 32px 22px 28px;
+      box-shadow: var(--shadow), 0 0 0 1px rgba(255,255,255,0.03) inset;
+      position: relative;
+      overflow: hidden;
+      animation: fadeSlideDown 0.55s 0.1s ease both;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top right, rgba(224,24,46,0.16), transparent 45%),
+        radial-gradient(circle at bottom left, rgba(50,30,120,0.15), transparent 45%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 140px; height: 140px;
+      background: radial-gradient(circle at top right, rgba(224,24,46,0.18), transparent 70%);
+      pointer-events: none;
+    }
+
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .step-dot {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-gaming);
+      font-size: 13px;
+      font-weight: 700;
+      background: var(--red);
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(224,24,46,0.15);
+    }
+    .step-dot.inactive {
+      background: rgba(255,255,255,0.06);
+      color: #4a527a;
+      box-shadow: none;
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+    .step-bar {
+      width: 42px; height: 2px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 2px;
+    }
+    .step-label {
+      text-align: center;
+      font-size: 11px;
+      color: #6a7299;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .headline {
+      text-align: center;
+      font-size: clamp(28px, 7.5vw, 38px);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      font-weight: 900;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+    .headline .accent {
+      color: var(--red);
+      position: relative;
+    }
+    .headline .accent::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--red), transparent);
+      border-radius: 2px;
+    }
+
+    .sub {
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--muted);
+      max-width: 400px;
+      margin: 0 auto 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Device buttons */
+    .device-stack {
+      display: grid;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 18px;
+    }
+
+    .device-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      background: linear-gradient(180deg, #f5263e 0%, #c0101e 100%);
+      color: #ffffff;
+      border-radius: 20px;
+      padding: 16px 18px;
+      border: none;
+      box-shadow: 0 18px 40px rgba(224,24,46,0.42), inset 0 1px 0 rgba(255,255,255,0.18);
+      transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .device-btn::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      animation: shimmer 2.8s ease-in-out infinite;
+    }
+    .device-btn.android::after { animation-delay: 0s; }
+    .device-btn.ios::after     { animation-delay: 1.4s; }
+    @keyframes shimmer {
+      0%   { left: -60%; }
+      100% { left: 160%; }
+    }
+    .device-btn:hover  {
+      transform: translateY(-2px) scale(1.01);
+      filter: brightness(1.08);
+      box-shadow: 0 22px 50px rgba(224,24,46,0.55);
+    }
+    .device-btn:active { transform: translateY(0); }
+
+    .device-icon {
+      min-width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      background: rgba(0,0,0,0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .device-icon svg { width: 28px; height: 28px; fill: #fff; }
+
+    .device-copy {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      flex-grow: 1;
+    }
+    .device-copy strong {
+      font-size: 18px;
+      line-height: 1.15;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+    .device-copy span {
+      font-size: 12px;
+      line-height: 1.35;
+      color: rgba(255,255,255,0.78);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .arrow {
+      font-size: 22px;
+      color: rgba(255,255,255,0.85);
+      font-weight: 800;
+      padding-right: 4px;
+    }
+
+    /* Reassurance strip */
+    .reassurance {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: rgba(46,204,113,0.08);
+      border: 1px solid rgba(46,204,113,0.25);
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #7aeba0;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 4px;
+    }
+    .reassurance svg {
+      width: 16px; height: 16px;
+      fill: var(--green);
+      flex-shrink: 0;
+    }
+
+    /* Trust row */
+    .trust-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 18px;
+      position: relative;
+      z-index: 1;
+    }
+    .trust-item {
+      text-align: center;
+      padding: 10px 6px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+    }
+    .trust-item strong {
+      display: block;
+      font-family: var(--font-gaming);
+      font-size: 16px;
+      color: var(--green);
+      line-height: 1.1;
+      margin-bottom: 2px;
+    }
+    .trust-item span {
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    footer {
+      text-align: center;
+      padding-top: 18px;
+      color: #40486a;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+    footer a { color: inherit; text-decoration: none; margin: 0 8px; }
+
+    @media (max-width: 420px) {
+      .page { padding-left: 14px; padding-right: 14px; }
+      .trust-row { gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <div class="topbar">
+      <div class="top-pill"><span class="dot"></span>Empfohlen</div>
+    </div>
+
+    <section class="hero">
+
+      <div class="step-indicator">
+        <div class="step-dot">1</div>
+        <div class="step-bar"></div>
+        <div class="step-dot inactive">2</div>
+        <div class="step-bar"></div>
+        <div class="step-dot inactive">3</div>
+      </div>
+
+      <div class="step-label">Schritt 1 von 3</div>
+
+      <h1 class="headline">
+        Welches <span class="accent">Gerät</span><br>nutzt du?
+      </h1>
+
+      <p class="sub">
+        Wähle dein Gerät, um dein passendes Angebot freizuschalten und sofort mit dem Verdienen zu beginnen.
+      </p>
+
+      <div class="device-stack">
+
+        <a href="index.html" class="device-btn android" data-device="android" aria-label="Android auswählen">
+          <span class="device-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M17.6 9.48l1.43-2.49-.87-.5-1.45 2.51a7.93 7.93 0 0 0-6.42 0L8.84 6.49l-.87.5 1.43 2.49A6.978 6.978 0 0 0 5 15v3h14v-3a6.978 6.978 0 0 0-1.4-5.52zM9 13.5a1 1 0 1 1 1-1 1 1 0 0 1-1 1zm6 0a1 1 0 1 1 1-1 1 1 0 0 1-1 1z"/>
+            </svg>
+          </span>
+          <span class="device-copy">
+            <strong>Android</strong>
+            <span>Samsung, Pixel, Xiaomi, Huawei, OnePlus…</span>
+          </span>
+          <span class="arrow">›</span>
+        </a>
+
+        <a href="index.html" class="device-btn ios" data-device="ios" aria-label="iOS auswählen">
+          <span class="device-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+            </svg>
+          </span>
+          <span class="device-copy">
+            <strong>iPhone / iOS</strong>
+            <span>iPhone, iPad — iOS 13 und neuer</span>
+          </span>
+          <span class="arrow">›</span>
+        </a>
+
+      </div>
+
+      <div class="reassurance">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+        </svg>
+        <span>Kostenlose Registrierung</span>
+      </div>
+
+    </section>
+
+    <footer>
+      <a href="#">Datenschutz</a>
+      <a href="#">Nutzungsbedingungen</a>
+      <a href="#">Haftungsausschluss</a><br>
+      © 2026 Alle Rechte vorbehalten.
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Preserve all incoming query params and attach the device selection
+      var incoming = window.location.search; // includes leading "?"
+
+      document.querySelectorAll("a.device-btn").forEach(function (el) {
+        el.addEventListener("click", function (e) {
+          e.preventDefault();
+          var device = el.getAttribute("data-device");
+          var base   = el.getAttribute("href");
+          var sep    = incoming ? "&" : "?";
+          var qs     = incoming + sep + "device=" + encodeURIComponent(device);
+          // Instant redirect to lander
+          window.location.href = base + qs;
+        });
+      });
+
+      // Also forward params on any other anchors (footer, etc.)
+      document.querySelectorAll("a:not(.device-btn)").forEach(function (el) {
+        var href = el.getAttribute("href");
+        if (!href || href.includes("#")) return;
+        if (href.includes("?")) {
+          el.setAttribute("href", href + incoming.replace("?", "&"));
+        } else {
+          el.setAttribute("href", href + incoming);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
